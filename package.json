@@ -1,0 +1,10 @@
+{
+  "name": "websockets",
+  "version": "1.0.0",
+  "description": "Alternative Websocket Client Effects Manager for Elm",
+  "author": "Charles Scalfani",
+  "license": "Unlicense",
+  "dependencies": {
+    "@panosoft/elm-native-helpers": "^0.1.7"
+  }
+}
