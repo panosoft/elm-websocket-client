@@ -1,9 +1,21 @@
 module.exports = {
-    entry:  './elm.js',
+    entry: './Test/index.js',
     output: {
-        library: 'Elm',
-        libraryTarget: 'var',
-        path:     '.',
-        filename: 'bundle.js',
+        path: './build',
+        filename: 'index.js'
     },
+    module: {
+        loaders: [
+            {
+                test: /\.html$/,
+                exclude: /node_modules/,
+                loader: 'html-loader'
+            },
+            {
+                test: /\.elm$/,
+                exclude: [/elm-stuff/],
+                loader: 'elm-webpack'
+            }
+        ]
+    }
 };
