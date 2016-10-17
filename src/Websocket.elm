@@ -84,6 +84,14 @@ type alias ConnectTagger msg =
     Url -> msg
 
 
+type alias SendErrorTagger msg =
+    ( Url, Message, ErrorMessage ) -> msg
+
+
+type alias SendTagger msg =
+    ( Url, Message ) -> msg
+
+
 type alias DisconnectErrorTagger msg =
     ( Url, ErrorMessage ) -> msg
 
@@ -96,31 +104,12 @@ type alias ListenErrorTagger msg =
     ( Url, ErrorMessage ) -> msg
 
 
-type alias SendErrorTagger msg =
-    ( Url, Message, ErrorMessage ) -> msg
-
-
-type alias SendTagger msg =
-    ( Url, Message ) -> msg
-
-
-type alias ConnectionTagger msg =
-    ( Url, ConnectionStatus ) -> msg
-
-
-type alias ConnectionClosedTagger msg =
-    Url -> msg
-
-
 type alias MessageTagger msg =
     ( Url, Message ) -> msg
 
 
-{-| Connection status
--}
-type ConnectionStatus
-    = Connected
-    | Disconnected
+type alias ConnectionClosedTagger msg =
+    Url -> msg
 
 
 
@@ -214,21 +203,39 @@ cmdMap f cmd =
             Disconnect (f << errorTagger) (f << tagger) url
 
 
-{-| TODO
+{-| Connect to a Websocket Server
+
+    Usage:
+        Websocket.connect ConnectError Connect "wss://echo.websocket.org"
+
+    where:
+        ConnectError and Connect are your application's messages to handle the different scenarios
 -}
 connect : ConnectErrorTagger msg -> ConnectTagger msg -> Url -> Cmd msg
 connect errorTagger tagger url =
     command (Connect errorTagger tagger url)
 
 
-{-| TODO
+{-| Send a message to the Websocket Server
+
+    Usage:
+        Websocket.send SendError Sent "wss://echo.websocket.org" "a string message"
+
+    where:
+        SendError and Sent are your application's messages to handle the different scenarios
 -}
 send : SendErrorTagger msg -> SendTagger msg -> Url -> String -> Cmd msg
 send errorTagger tagger url message =
     command (Send errorTagger tagger url message)
 
 
-{-| TODO
+{-| Disconnect from a Websocket Server
+
+    Usage:
+        disconnect ErrorDisconnect SuccessDisconnect "wss://echo.websocket.org"
+
+    where:
+        ErrorDisconnect and SuccessDisconnect are your application's messages to handle the different scenarios
 -}
 disconnect : DisconnectErrorTagger msg -> DisconnectTagger msg -> Url -> Cmd msg
 disconnect errorTagger tagger url =
@@ -246,7 +253,15 @@ subMap f sub =
             Listen (f << errorTagger) (f << messageTagger) (f << connectionClosedTagger) url
 
 
-{-| TODO
+{-| Listen for messages and events from a Websocket Server
+
+    Usage:
+        Websocket.listen ListenError Message ConnectionLost "wss://echo.websocket.org"
+
+    where:
+        ListenError is your application's message to handle an error in listening
+        Message is your application's message to handle received messages
+        ConnectionLost is your application's message to handle when the server closes it's connection
 -}
 listen : ListenErrorTagger msg -> MessageTagger msg -> ConnectionClosedTagger msg -> Url -> Sub msg
 listen errorTagger messageTagger connectionClosedTagger url =
