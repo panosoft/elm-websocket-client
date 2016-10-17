@@ -72,7 +72,7 @@ disconnect errorTagger tagger url
 __Usage__
 
 ```elm
-disconnect ErrorDisconnect SuccessDisconnect "wss://echo.websocket.org"
+Websocket.disconnect ErrorDisconnect SuccessDisconnect "wss://echo.websocket.org"
 ```
 
 * `ErrorDisconnect` and `SuccessDisconnect` are your application's messages to handle the different scenarios
@@ -163,7 +163,7 @@ SendError ( url, message, error ) ->
 
 #### SendTagger
 
-Error attempting to send.
+Successful send.
 
 ```elm
 type alias SendTagger msg =
