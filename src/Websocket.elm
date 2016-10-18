@@ -147,7 +147,7 @@ type alias State msg =
     flip Maybe.withDefault
 
 
-{-| lazy version of // operator
+{-| lazy version of ?= operator
 -}
 (?!=) : Maybe a -> (() -> a) -> a
 (?!=) maybe lazy =
