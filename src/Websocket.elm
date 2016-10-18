@@ -206,7 +206,7 @@ cmdMap f cmd =
 {-| Connect to a Websocket Server
 
     Usage:
-        Websocket.connect ConnectError Connect "wss://echo.websocket.org"
+        connect ConnectError Connect "wss://echo.websocket.org"
 
     where:
         ConnectError and Connect are your application's messages to handle the different scenarios
@@ -219,7 +219,7 @@ connect errorTagger tagger url =
 {-| Send a message to the Websocket Server
 
     Usage:
-        Websocket.send SendError Sent "wss://echo.websocket.org" "a string message"
+        send SendError Sent "wss://echo.websocket.org" "a string message"
 
     where:
         SendError and Sent are your application's messages to handle the different scenarios
@@ -256,7 +256,7 @@ subMap f sub =
 {-| Listen for messages and events from a Websocket Server
 
     Usage:
-        Websocket.listen ListenError Message ConnectionLost "wss://echo.websocket.org"
+        listen ListenError Message ConnectionLost "wss://echo.websocket.org"
 
     where:
         ListenError is your application's message to handle an error in listening

@@ -39,7 +39,7 @@ connect errorTagger tagger url
 __Usage__
 
 ```elm
-Websocket.connect ConnectError Connect "wss://echo.websocket.org"
+connect ConnectError Connect "wss://echo.websocket.org"
 ```
 * `ConnectError` and `Connect` are your application's messages to handle the different scenarios.
 * `wss://echo.websocket.org` is the URL to the websocket server
@@ -55,7 +55,7 @@ send errorTagger tagger url message
 __Usage__
 
 ```elm
-Websocket.send SendError Sent "wss://echo.websocket.org" "a string message"
+send SendError Sent "wss://echo.websocket.org" "a string message"
 ```
 * `SendError` and `Sent` are your application's messages to handle the different scenarios
 * `wss://echo.websocket.org` is the URL to the websocket server
@@ -72,7 +72,7 @@ disconnect errorTagger tagger url
 __Usage__
 
 ```elm
-Websocket.disconnect ErrorDisconnect SuccessDisconnect "wss://echo.websocket.org"
+disconnect ErrorDisconnect SuccessDisconnect "wss://echo.websocket.org"
 ```
 
 * `ErrorDisconnect` and `SuccessDisconnect` are your application's messages to handle the different scenarios
@@ -92,7 +92,7 @@ listen errorTagger messageTagger connectionClosedTagger url =
 __Usage__
 
 ```elm
-Websocket.listen ListenError Message ConnectionClosed "wss://echo.websocket.org"
+listen ListenError Message ConnectionClosed "wss://echo.websocket.org"
 ```
 * `ListenError` is your application's message to handle an error in listening
 * `Message` is your application's message to handle received messages
