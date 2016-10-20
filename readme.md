@@ -1,6 +1,8 @@
 # Alternative Websocket Effects Manager for Elm
 
-> Websocket (Client) Effects Manager for Elm programs that allows for more sophisticated higher-level protocols. The API requires connections to be explicitly handled by the application. This version provides messages when the connection is lost allowing stateful connection protocols to reinitialize their state, e.g. authentication or subscription.
+> Websocket Effects Manager for Elm front-end programs that allows for more sophisticated higher-level protocols. It provides a message when the connection is lost allowing clients to employ their own reconnection strategy.
+
+>For example, when connecting to stateful back-end services, the client may need to re-authenticate or re-subscribe to that service.
 
 ## Install
 
@@ -10,7 +12,7 @@ Since the Elm Package Manager doesn't allow for Native code and this uses Native
 
 ### Node modules
 
-Since this Effects Manager is for the browser and the native code relies on node-based code, some package manager is required. Webpack is used in the Test application.
+Since this Effects Manager is for the browser and the native code relies on node-based code, some package manager is required. [Webpack](https://webpack.github.io/) is used in the Test application.
 
 You'll also need to install the dependent node modules at the root of your Application Directory. See the example `package.json` for a list of the dependencies.
 
