@@ -145,10 +145,8 @@ viewMessage msg =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     case model.listenError of
+        False ->
+            Websocket.listen ListenError Message ConnectionLost model.url
+
         True ->
             Sub.none
-
-        False ->
-            Sub.batch
-                [ Websocket.listen ListenError Message ConnectionLost model.url
-                ]
