@@ -24,7 +24,7 @@ const E = {
 // This module is in the same scope as Elm but all modules that are required are NOT
 // So we must pass elm globals to it (see https://github.com/panosoft/elm-native-helpers for the minimum of E)
 const helper = require('@panosoft/elm-native-helpers/helper')(E);
-const _panosoft$elm_websocket_browser$Native_Websocket = _ => {
+const _panosoft$elm_websocket_browser$Native_Websocket = (_ => {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Cmds
     const _connect = (url, openCb, messageCb, connectionClosedCb, cb) => {
@@ -73,6 +73,6 @@ const _panosoft$elm_websocket_browser$Native_Websocket = _ => {
 		// Subs
 	};
 
-}();
+})();
 // for local testing
 const _user$project$Native_Websocket = _panosoft$elm_websocket_browser$Native_Websocket;
