@@ -346,9 +346,6 @@ handleCmd router state cmd =
     case cmd of
         Connect errorTagger tagger url ->
             let
-                openCb url ws =
-                    Platform.sendToSelf router <| SuccessConnect tagger url ws
-
                 messageCb message =
                     Platform.sendToSelf router (Message url message)
 
@@ -357,7 +354,7 @@ handleCmd router state cmd =
             in
                 (Dict.get url state.connections)
                     |?> (\_ -> ( Platform.sendToApp router (errorTagger ( url, "Connection already exists for specified url: " ++ (toString url) )), state ))
-                    ?= ( Native.Websocket.connect (settings0 router (ErrorConnect errorTagger url) Nop) url openCb messageCb connectionClosedCb
+                    ?= ( Native.Websocket.connect (settings1 router (ErrorConnect errorTagger url) (SuccessConnect tagger url)) url messageCb connectionClosedCb
                        , { state | connections = Dict.insert url Nothing state.connections }
                        )
 

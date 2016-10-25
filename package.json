@@ -1,6 +1,6 @@
 {
   "name": "websockets",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Alternative Websocket Client Effects Manager for Elm",
   "author": "Charles Scalfani",
   "license": "Unlicense",
