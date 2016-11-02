@@ -343,38 +343,52 @@ settings2 router errorTagger tagger =
 
 handleCmd : Platform.Router msg (Msg msg) -> State msg -> MyCmd msg -> ( Task Never (), State msg )
 handleCmd router state cmd =
-    case cmd of
-        Connect errorTagger tagger url ->
-            let
-                messageCb message =
-                    Platform.sendToSelf router (Message url message)
+    let
+        connectedOperation url operation sendError =
+            ( (Dict.get url state.connections)
+                |?> (\maybeWs ->
+                        maybeWs
+                            |?> operation
+                            ?= sendError ("Connection pending for specified url: " ++ (toString url))
+                    )
+                ?= sendError ("Connection does not exists for specified url: " ++ (toString url))
+            , state
+            )
+    in
+        case cmd of
+            Connect errorTagger tagger url ->
+                let
+                    messageCb message =
+                        Platform.sendToSelf router (Message url message)
 
-                connectionClosedCb _ =
-                    Platform.sendToSelf router <| ConnectionClosed url
-            in
-                (Dict.get url state.connections)
-                    |?> (\_ -> ( Platform.sendToApp router (errorTagger ( url, "Connection already exists for specified url: " ++ (toString url) )), state ))
-                    ?= ( Native.Websocket.connect (settings1 router (ErrorConnect errorTagger url) (SuccessConnect tagger url)) url messageCb connectionClosedCb
-                       , { state | connections = Dict.insert url Nothing state.connections }
-                       )
+                    connectionClosedCb _ =
+                        Platform.sendToSelf router <| ConnectionClosed url
+                in
+                    (Dict.get url state.connections)
+                        |?> (\_ -> ( Platform.sendToApp router (errorTagger ( url, "Connection already exists for specified url: " ++ (toString url) )), state ))
+                        ?= ( Native.Websocket.connect (settings1 router (ErrorConnect errorTagger url) (SuccessConnect tagger url)) url messageCb connectionClosedCb
+                           , { state | connections = Dict.insert url Nothing state.connections }
+                           )
 
-        Send errorTagger tagger url message ->
-            let
-                error errMsg =
-                    Platform.sendToApp router (errorTagger ( url, message, errMsg ))
-            in
-                ( (Dict.get url state.connections)
-                    |?> (\maybeWs ->
-                            maybeWs
-                                |?> (\ws -> Native.Websocket.send (settings0 router (ErrorSend errorTagger url message) (SuccessSend tagger url message)) ws message)
-                                ?= error ("Connection pending for specified url: " ++ (toString url))
-                        )
-                    ?= error ("Connection does not exists for specified url: " ++ (toString url))
-                , state
-                )
+            Send errorTagger tagger url message ->
+                let
+                    error errorTagger url message errMsg =
+                        Platform.sendToApp router (errorTagger ( url, message, errMsg ))
 
-        Disconnect errorTagger tagger url ->
-            ( Task.succeed (), state )
+                    send errorTagger tagger url message ws =
+                        Native.Websocket.send (settings0 router (ErrorSend errorTagger url message) (SuccessSend tagger url message)) ws message
+                in
+                    connectedOperation url (send errorTagger tagger url message) (error errorTagger url message)
+
+            Disconnect errorTagger tagger url ->
+                let
+                    sendError errorTagger tagger url errMsg =
+                        Platform.sendToApp router (errorTagger ( url, errMsg ))
+
+                    disconnect errorTagger tagger url ws =
+                        Native.Websocket.disconnect (settings0 router (ErrorDisconnect errorTagger url) (SuccessDisconnect tagger url))
+                in
+                    connectedOperation url (disconnect errorTagger tagger url) (sendError errorTagger tagger url)
 
 
 crashTask : a -> String -> Task Never a
@@ -416,6 +430,8 @@ type Msg msg
     | ErrorSend (SendErrorTagger msg) Url Message ErrorMessage
     | SuccessSend (SendTagger msg) Url Message
     | ConnectionClosed Url
+    | ErrorDisconnect (DisconnectErrorTagger msg) Url String
+    | SuccessDisconnect (DisconnectTagger msg) Url
 
 
 onSelfMsg : Platform.Router msg (Msg msg) -> Msg msg -> State msg -> Task Never (State msg)
@@ -456,4 +472,12 @@ onSelfMsg router selfMsg state =
             (Dict.get url state.listeners)
                 |?> (\listener -> Platform.sendToApp router (listener.connectionClosedTagger url))
                 ?= Task.succeed ()
+                &> Task.succeed (removeConnection url state)
+
+        ErrorDisconnect errorTagger url error ->
+            Platform.sendToApp router (errorTagger ( url, error ))
                 &> Task.succeed state
+
+        SuccessDisconnect tagger url ->
+            Platform.sendToApp router (tagger url)
+                &> Task.succeed (removeConnection url state)
