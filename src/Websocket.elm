@@ -385,7 +385,7 @@ handleCmd router state cmd =
                     sendError errorTagger tagger url errMsg =
                         Platform.sendToApp router (errorTagger ( url, errMsg ))
 
-                    disconnect errorTagger tagger url ws =
+                    disconnect errorTagger tagger url =
                         Native.Websocket.disconnect (settings0 router (ErrorDisconnect errorTagger url) (SuccessDisconnect tagger url))
                 in
                     connectedOperation url (disconnect errorTagger tagger url) (sendError errorTagger tagger url)
