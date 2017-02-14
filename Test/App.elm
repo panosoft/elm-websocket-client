@@ -1,8 +1,8 @@
 module Test.App exposing (..)
 
+import Platform
 import String
 import Html exposing (..)
-import Html.App
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Websocket exposing (..)
@@ -49,15 +49,12 @@ init =
         model ! [ Websocket.connect ConnectError Connect model.url ]
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
-    -- N.B. the dummy init which returns an empty Model and no Cmd
-    -- N.B. the dummy view returns an empty HTML text node
-    --      this is just to make the compiler happy since the worker() call Javascript doesn't use a render
-    Html.App.program
+    Html.program
         { init = init
-        , view = view
         , update = update
+        , view = view
         , subscriptions = subscriptions
         }
 
