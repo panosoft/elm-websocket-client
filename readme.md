@@ -1,6 +1,6 @@
 # Alternative Websocket Effects Manager for Elm
 
-> Websocket Effects Manager for Elm front-end programs that allows for more sophisticated higher-level protocols. It provides a message when the connection is lost allowing clients to employ their own reconnection strategy.
+> Websocket Effects Manager for Elm that works with BOTH front-end (browser) and back-end (node) programs. It allows for more sophisticated higher-level protocols than the default Websocket provided by Elm. It provides a message when the connection is lost allowing clients to employ their own reconnection strategy.
 
 >For example, when connecting to stateful back-end services, the client may need to re-authenticate or re-subscribe to that service.
 
@@ -10,19 +10,25 @@
 
 Since the Elm Package Manager doesn't allow for Native code and this uses Native code, you have to install it directly from GitHub, e.g. via [elm-github-install](https://github.com/gdotdesign/elm-github-install) or some equivalent mechanism.
 
-### Node modules
+### Node modules in Browser
 
-Since this Effects Manager is for the browser and the native code relies on node-based code, some package manager is required. [Webpack](https://webpack.github.io/) is used in the Test application.
+This Effects Manager uses native code that relies on node-based code. Therefore, when this Effects Manager is used the browser, some package manager is required. [Webpack](https://webpack.github.io/) is used in the Test application.
 
-You'll also need to install the dependent node modules at the root of your Application Directory. See the example `package.json` for a list of the dependencies.
+You'll also need to install the dependent node modules at the root of your Application Directory. See the example `package.json` for a list of the dependencies. ***N.B. The `ws` package is NOT needed for use in the Browser.***
 
 The installation can be done via `npm install` command.
 
-### Build Test App
+### Build Test Apps
 
-The `buildTest.sh` file contains the Webpack command to build the test program.
+#### Browser
 
-The output will be in a build directory. This file will be included by the `Test/index.html` file.
+The `buildBrowser.sh` (and `aBuildBrowser.sh`) file(s) contains the Webpack command to build the test Browser program.
+
+The output will be in a build directory. This file will be included by the `Test/Browser/index.html` file.
+
+#### Node
+
+The `buildNode.sh` (and `aBuildNode.sh`) file(s) contains the build command to build the test Node program.
 
 ## API
 
@@ -282,8 +288,3 @@ ConnectionClosed url ->
 	in
 		{ model | connected = False } ! []
 ```
-
-
-## Warning
-
-This library is still in alpha.

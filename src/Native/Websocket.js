@@ -62,7 +62,13 @@ var _panosoft$elm_websocket_browser$Native_Websocket;
 		// Cmds
 	    const _connect = (url, messageCb, connectionClosedCb, cb) => {
 	        try {
-	            const ws = new WebSocket(url);
+				var ws;
+				if (!process.env.BROWSER) {
+					const WebSocket = require('ws')
+					ws = new WebSocket(url);
+				}
+	            else
+	            	ws = new WebSocket(url);
 	            var open = false;
 	            ws.addEventListener('open', _ => {
 					open = true;
