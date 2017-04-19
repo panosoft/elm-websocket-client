@@ -1,7 +1,7 @@
 {
-    "version": "3.0.0",
+    "version": "3.0.1",
     "summary": "Alternative Websocket Client Effects Manager for Elm",
-    "repository": "https://github.com/panosoft/elm-websocket-browser.git",
+    "repository": "https://github.com/panosoft/elm-websocket-client.git",
     "license": "Unlicense",
     "source-directories": [
         "src"
