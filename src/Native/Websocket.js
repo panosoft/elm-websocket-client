@@ -1,4 +1,4 @@
-var _panosoft$elm_websocket_browser$Native_Websocket;
+var _panosoft$elm_websocket_client$Native_Websocket;
 (function() {
 	// Elm globals (some for elm-native-helpers and some for us and some for the future)
 	const E = {
@@ -26,7 +26,7 @@ var _panosoft$elm_websocket_browser$Native_Websocket;
 	// This module is in the same scope as Elm but all modules that are required are NOT
 	// So we must pass elm globals to it (see https://github.com/panosoft/elm-native-helpers for the minimum of E)
 	const helper = require('@panosoft/elm-native-helpers/helper')(E);
-	_panosoft$elm_websocket_browser$Native_Websocket = function() {
+	_panosoft$elm_websocket_client$Native_Websocket = function() {
 		const wsCloseReason = event => {
 			// See http://tools.ietf.org/html/rfc6455#section-7.4.1
 			if (event.code == 1000)
@@ -124,4 +124,4 @@ var _panosoft$elm_websocket_browser$Native_Websocket;
 	}();
 })();
 // for local testing
-const _user$project$Native_Websocket = _panosoft$elm_websocket_browser$Native_Websocket;
+const _user$project$Native_Websocket = _panosoft$elm_websocket_client$Native_Websocket;
