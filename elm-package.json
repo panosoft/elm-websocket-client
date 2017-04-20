@@ -1,5 +1,5 @@
 {
-    "version": "3.0.2",
+    "version": "3.0.3",
     "summary": "Alternative Websocket Client Effects Manager for Elm",
     "repository": "https://github.com/panosoft/elm-websocket-client.git",
     "license": "Unlicense",

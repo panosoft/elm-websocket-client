@@ -74,6 +74,7 @@ var _panosoft$elm_websocket_client$Native_Websocket;
 					open = true;
 					cb(null, ws);
 				});
+				ws.addEventListener('error', error => error); // to avoid unhandled exception
 	            ws.addEventListener('message', event => E.Scheduler.rawSpawn(messageCb(event.data)));
 	            ws.addEventListener('close', event => {
 					if (open) {
