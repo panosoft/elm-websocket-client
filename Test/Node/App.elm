@@ -21,7 +21,7 @@ type alias Model =
 
 type Msg
     = Nop
-    | ConnectError ( Url, ErrorMessage )
+    | ConnectError ( Url, ( ConnectErrorCode, ErrorMessage ) )
     | Connect Url
     | SendError ( Url, Message, ErrorMessage )
     | Sent ( Url, Message )

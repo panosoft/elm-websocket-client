@@ -7,6 +7,7 @@ effect module Websocket
         , listen
         , Url
         , Message
+        , ConnectErrorCode
         , ErrorMessage
         )
 
@@ -21,7 +22,7 @@ The native driver is browser-based
 @docs listen
 
 # Types
-@docs Url, Message, ErrorMessage
+@docs Url, Message, ConnectErrorCode, ErrorMessage
 
 -}
 
@@ -72,12 +73,18 @@ type alias ErrorMessage =
     String
 
 
+{-| Websocket connect error code
+-}
+type alias ConnectErrorCode =
+    Int
+
+
 
 -- Taggers
 
 
 type alias ConnectErrorTagger msg =
-    ( Url, ErrorMessage ) -> msg
+    ( Url, ( ConnectErrorCode, ErrorMessage ) ) -> msg
 
 
 type alias ConnectTagger msg =
@@ -362,7 +369,7 @@ handleCmd router state cmd =
                         Platform.sendToSelf router <| ConnectionClosed url
                 in
                     (Dict.get url state.connections)
-                        |?> (\_ -> ( Platform.sendToApp router (errorTagger ( url, "Connection already exists for specified url: " ++ (toString url) )), state ))
+                        |?> (\_ -> ( Platform.sendToApp router (errorTagger ( url, ( 0, "Connection already exists for specified url: " ++ (toString url) ) )), state ))
                         ?= ( Native.Websocket.connect (settings1 router (ErrorConnect errorTagger url) (SuccessConnect tagger url)) url messageCb connectionClosedCb
                            , { state | connections = Dict.insert url Nothing state.connections }
                            )
@@ -421,7 +428,7 @@ removeConnection url state =
 
 type Msg msg
     = Nop
-    | ErrorConnect (ConnectErrorTagger msg) Url ErrorMessage
+    | ErrorConnect (ConnectErrorTagger msg) Url ( ConnectErrorCode, ErrorMessage )
     | SuccessConnect (ConnectTagger msg) Url Websocket
     | Message Url Message
     | ErrorSend (SendErrorTagger msg) Url Message ErrorMessage

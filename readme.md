@@ -115,16 +115,17 @@ Error when connecting.
 
 ```elm
 type alias ConnectErrorTagger msg =
-    ( Url, ErrorMessage ) -> msg
+    ( Url, ( ConnectErrorCode, ErrorMessage ) ) -> msg
 ```
+`ConnectErrorCode` values are defined in the [Websocket Protocol](https://tools.ietf.org/html/rfc6455#section-7.4.1).
 
 __Usage__
 
 ```elm
-ConnectError ( url, error ) ->
+ConnectError ( url, (errorCode, errorMessage) ) ->
 	let
 		l =
-			Debug.log "ConnectError" ( url, error )
+			Debug.log "ConnectError" ( url, (errorCode, errorMessage) )
 	in
 		model ! []
 ```

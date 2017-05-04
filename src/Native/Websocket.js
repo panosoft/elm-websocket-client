@@ -21,6 +21,9 @@ var _panosoft$elm_websocket_client$Native_Websocket;
 		Result: {
 			Err: _elm_lang$core$Result$Err,
 			Ok: _elm_lang$core$Result$Ok
+		},
+		Tuple2: {
+			ctor: _elm_lang$core$Native_Utils.Tuple2
 		}
 	};
 	// This module is in the same scope as Elm but all modules that are required are NOT
@@ -82,7 +85,7 @@ var _panosoft$elm_websocket_client$Native_Websocket;
 						E.Scheduler.rawSpawn(connectionClosedCb());
 					}
 					else
-						cb(wsCloseReason(event));
+						cb(E.Tuple2.ctor(event.code, wsCloseReason(event)));
 				});
 	        }
 	        catch (err) {
