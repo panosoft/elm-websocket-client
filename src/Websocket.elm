@@ -116,7 +116,7 @@ type alias MessageTagger msg =
 
 
 type alias ConnectionClosedTagger msg =
-    Url -> msg
+    ( Url, ConnectErrorCode, ErrorMessage ) -> msg
 
 
 
@@ -365,8 +365,8 @@ handleCmd router state cmd =
                     messageCb message =
                         Platform.sendToSelf router (Message url message)
 
-                    connectionClosedCb _ =
-                        Platform.sendToSelf router <| ConnectionClosed url
+                    connectionClosedCb error =
+                        Platform.sendToSelf router <| ConnectionClosed url error
                 in
                     (Dict.get url state.connections)
                         |?> (\_ -> ( Platform.sendToApp router (errorTagger ( url, ( 0, "Connection already exists for specified url: " ++ (toString url) ) )), state ))
@@ -433,7 +433,7 @@ type Msg msg
     | Message Url Message
     | ErrorSend (SendErrorTagger msg) Url Message ErrorMessage
     | SuccessSend (SendTagger msg) Url Message
-    | ConnectionClosed Url
+    | ConnectionClosed Url ( ConnectErrorCode, ErrorMessage )
     | ErrorDisconnect (DisconnectErrorTagger msg) Url String
     | SuccessDisconnect (DisconnectTagger msg) Url
 
@@ -472,9 +472,9 @@ onSelfMsg router selfMsg state =
             Platform.sendToApp router (tagger ( url, message ))
                 &> Task.succeed state
 
-        ConnectionClosed url ->
+        ConnectionClosed url ( errorCode, errorMessage ) ->
             (Dict.get url state.listeners)
-                |?> (\listener -> Platform.sendToApp router (listener.connectionClosedTagger url))
+                |?> (\listener -> Platform.sendToApp router (listener.connectionClosedTagger ( url, errorCode, errorMessage )))
                 ?= Task.succeed ()
                 &> Task.succeed (removeConnection url state)
 

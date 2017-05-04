@@ -100,11 +100,11 @@ listen errorTagger messageTagger connectionClosedTagger url =
 __Usage__
 
 ```elm
-listen ListenError Message ConnectionClosed "wss://echo.websocket.org"
+listen ListenError Message ConnectionLost "wss://echo.websocket.org"
 ```
 * `ListenError` is your application's message to handle an error in listening
 * `Message` is your application's message to handle received messages
-* `ConnectionClosed` is your application's message to handle when the server closes it's connection
+* `ConnectionLost` is your application's message to handle when the server closes it's connection
 * `wss://echo.websocket.org` is the URL to the websocket server
 
 ### Messages
@@ -276,16 +276,16 @@ Server closed the connection.
 
 ```elm
 type alias ConnectionClosedTagger msg =
-    Url -> msg
+    (Url, ConnectErrorCode, ErrorMessage) -> msg
 ```
 
 __Usage__
 
 ```elm
-ConnectionClosed url ->
+ConnectionLost (url, errorCode, errorMessage) ->
 	let
 		l =
-			Debug.log "ConnectionClosed" url
+			Debug.log "ConnectionLost" (url, errorCode, errorMessage)
 	in
 		{ model | connected = False } ! []
 ```

@@ -28,7 +28,7 @@ type Msg
     | SendMessage String
     | ListenError ( Url, ErrorMessage )
     | Message ( Url, Message )
-    | ConnectionLost Url
+    | ConnectionLost ( Url, ConnectErrorCode, ErrorMessage )
 
 
 initModel : Model
@@ -115,10 +115,10 @@ update msg model =
             in
                 model ! []
 
-        ConnectionLost url ->
+        ConnectionLost error ->
             let
                 l =
-                    Debug.log "ConnectionLost" url
+                    Debug.log "ConnectionLost" error
             in
                 { model | connected = False } ! []
 

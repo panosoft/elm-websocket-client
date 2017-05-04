@@ -80,12 +80,13 @@ var _panosoft$elm_websocket_client$Native_Websocket;
 				ws.addEventListener('error', error => error); // to avoid unhandled exception
 	            ws.addEventListener('message', event => E.Scheduler.rawSpawn(messageCb(event.data)));
 	            ws.addEventListener('close', event => {
+					const error = E.Tuple2.ctor(event.code, wsCloseReason(event));
 					if (open) {
 						open = false;
-						E.Scheduler.rawSpawn(connectionClosedCb());
+						E.Scheduler.rawSpawn(connectionClosedCb(error));
 					}
 					else
-						cb(E.Tuple2.ctor(event.code, wsCloseReason(event)));
+						cb(error);
 				});
 	        }
 	        catch (err) {
