@@ -36,7 +36,7 @@ import Native.Websocket
 
 
 type MyCmd msg
-    = Connect (ConnectErrorTagger msg) (ConnectTagger msg) Url
+    = Connect (ConnectErrorTagger msg) (ConnectTagger msg) Url Bool
     | Send (SendErrorTagger msg) (SendTagger msg) Url String
     | Disconnect (DisconnectErrorTagger msg) (DisconnectTagger msg) Url
 
@@ -200,8 +200,8 @@ init =
 cmdMap : (a -> b) -> MyCmd a -> MyCmd b
 cmdMap f cmd =
     case cmd of
-        Connect errorTagger tagger url ->
-            Connect (f << errorTagger) (f << tagger) url
+        Connect errorTagger tagger url rejectUnauthorized ->
+            Connect (f << errorTagger) (f << tagger) url rejectUnauthorized
 
         Send errorTagger tagger url message ->
             Send (f << errorTagger) (f << tagger) url message
@@ -218,9 +218,9 @@ cmdMap f cmd =
     where:
         ConnectError and Connect are your application's messages to handle the different scenarios
 -}
-connect : ConnectErrorTagger msg -> ConnectTagger msg -> Url -> Cmd msg
-connect errorTagger tagger url =
-    command (Connect errorTagger tagger url)
+connect : ConnectErrorTagger msg -> ConnectTagger msg -> Url -> Bool -> Cmd msg
+connect errorTagger tagger url rejectUnauthorized =
+    command (Connect errorTagger tagger url rejectUnauthorized)
 
 
 {-| Send a message to the Websocket Server
@@ -360,7 +360,7 @@ handleCmd router state cmd =
             )
     in
         case cmd of
-            Connect errorTagger tagger url ->
+            Connect errorTagger tagger url rejectUnauthorized ->
                 let
                     messageCb message =
                         Platform.sendToSelf router (Message url message)
@@ -370,7 +370,7 @@ handleCmd router state cmd =
                 in
                     (Dict.get url state.connections)
                         |?> (\_ -> ( Platform.sendToApp router (errorTagger ( url, ( 0, "Connection already exists for specified url: " ++ (toString url) ) )), state ))
-                        ?= ( Native.Websocket.connect (settings1 router (ErrorConnect errorTagger url) (SuccessConnect tagger url)) url messageCb connectionClosedCb
+                        ?= ( Native.Websocket.connect (settings1 router (ErrorConnect errorTagger url) (SuccessConnect tagger url)) url rejectUnauthorized messageCb connectionClosedCb
                            , { state | connections = Dict.insert url Nothing state.connections }
                            )
 

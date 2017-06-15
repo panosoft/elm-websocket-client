@@ -36,7 +36,7 @@ initModel =
     { connected = False
     , input = ""
     , messages = []
-    , url = "ws://localhost:8080"
+    , url = "wss://localhost:8080"
     , listenError = False
     }
 
@@ -47,7 +47,7 @@ init =
         model =
             initModel
     in
-        model ! [ Websocket.connect ConnectError Connect model.url ]
+        model ! [ Websocket.connect ConnectError Connect model.url False ]
 
 
 main : Program Never Model Msg

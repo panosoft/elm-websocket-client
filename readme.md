@@ -41,16 +41,17 @@ This must be done before any other commands are run.
 Connections are maintained by the Effect Manager State and are referenced via `url`s.
 
 ```elm
-connect : ConnectErrorTagger msg -> ConnectTagger msg -> Url -> Cmd msg
-connect errorTagger tagger url
+connect : ConnectErrorTagger msg -> ConnectTagger msg -> Url -> Bool -> Cmd msg
+connect errorTagger tagger url rejectUnauthorized
 ```
 __Usage__
 
 ```elm
-connect ConnectError Connect "wss://echo.websocket.org"
+connect ConnectError Connect "wss://echo.websocket.org" True
 ```
 * `ConnectError` and `Connect` are your application's messages to handle the different scenarios.
 * `wss://echo.websocket.org` is the URL to the websocket server
+* `rejectUnauthorized` should be **True** unless testing with self-signed certificates (do not set to False in production!!!) This parameter is ignored if you're running in the Browser.
 
 > Send a message to the Websocket Server
 

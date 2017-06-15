@@ -63,12 +63,12 @@ var _panosoft$elm_websocket_client$Native_Websocket;
 		};
 	    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Cmds
-	    const _connect = (url, messageCb, connectionClosedCb, cb) => {
+	    const _connect = (url, rejectUnauthorized, messageCb, connectionClosedCb, cb) => {
 	        try {
 				var ws;
 				if (!process.env.BROWSER) {
 					const WebSocket = require('ws')
-					ws = new WebSocket(url);
+					ws = new WebSocket(url, { rejectUnauthorized });
 				}
 	            else
 	            	ws = new WebSocket(url);
@@ -113,13 +113,13 @@ var _panosoft$elm_websocket_client$Native_Websocket;
 	            cb(err.message);
 	        }
 	    };
-	    const connect = helper.call3_1(_connect);
+	    const connect = helper.call4_1(_connect);
 	    const send = helper.call2_0(_send);
 	    const disconnect = helper.call1_0(_disconnect);
 		return {
 			///////////////////////////////////////////
 			// Cmds
-	        connect: F4(connect),
+	        connect: F5(connect),
 	        send: F3(send),
 	        disconnect: F2(disconnect)
 			///////////////////////////////////////////
