@@ -6,27 +6,26 @@
 
 ## Install
 
-### Elm
+You'll need [Grove](https://github.com/panosoft/elm-grove.git).
 
-Since the Elm Package Manager doesn't allow for Native code and this uses Native code, you have to install it directly from GitHub, e.g. via [elm-github-install](https://github.com/gdotdesign/elm-github-install) or some equivalent mechanism.
+```
+grove install panosoft/elm-websocket-client
+```
 
-### Node modules in Browser
+## Node modules in Browser
 
 This Effects Manager uses native code that relies on node-based code. Therefore, when this Effects Manager is used the browser, some package manager is required. [Webpack](https://webpack.github.io/) is used in the Test application.
 
-You'll also need to install the dependent node modules at the root of your Application Directory. See the example `package.json` for a list of the dependencies. ***N.B. The `ws` package is NOT needed for use in the Browser.***
 
-The installation can be done via `npm install` command.
+## Build Test Apps
 
-### Build Test Apps
-
-#### Browser
+### Browser
 
 The `buildBrowser.sh` (and `aBuildBrowser.sh`) file(s) contains the Webpack command to build the test Browser program.
 
 The output will be in a build directory. This file will be included by the `Test/Browser/index.html` file.
 
-#### Node
+### Node
 
 The `buildNode.sh` (and `aBuildNode.sh`) file(s) contains the build command to build the test Node program.
 
