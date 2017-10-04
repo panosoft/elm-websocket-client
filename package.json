@@ -1,6 +1,6 @@
 {
   "name": "@panosoft/elm-websocket-client",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Alternative Websocket Client Effects Manager for Elm",
   "author": "Charles Scalfani",
   "license": "Unlicense",
